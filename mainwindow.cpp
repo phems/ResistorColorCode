@@ -24,12 +24,12 @@ MainWindow::MainWindow(QWidget *parent)
         ui->comboDig_3->addItem(digitColors[i]);
     }
 
-    for (int i = 0; i<multiplierColors->size(); i++)
+    for (int i = 0; i < 12; i++)
     {
         ui->comboMultiplier->addItem(multiplierColors[i]);
     }
 
-    for (int i = 0; i < toleranceColors->size(); i++)
+    for (int i = 0; i < 8; i++)
     {
         ui->comboTolerance->addItem(toleranceColors[i]);
     }
