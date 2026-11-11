@@ -82,7 +82,7 @@ void MainWindow::calculateValue() // Hier wordt de logica voor het berekenen gep
     double toleranceValue = resistorCalculator.getTolerance();
 
     // Resultaat wordt weergegeven
-    QString result = ("Resistance value: " + QString::number(resistorValue) + " " + QString::number(toleranceValue) + "%");
+    QString result = ("Resistance value: " + QString::number(resistorValue) + "Ω " + QString::number(toleranceValue) + "%");
 
     ui->label->setText(result);
 };
