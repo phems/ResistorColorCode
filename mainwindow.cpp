@@ -51,6 +51,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // calculateValue function bij het opstarten
     calculateValue();
+
+    // verander de window titel
+    QWidget::setWindowTitle("Color Code Calculator");
 }
 
 void MainWindow::calculateValue() // Hier wordt de logica voor het berekenen geplaatst
