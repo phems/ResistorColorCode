@@ -53,6 +53,40 @@ MainWindow::MainWindow(QWidget *parent)
     calculateValue();
 }
 
+void MainWindow::calculateValue() // Hier wordt de logica voor het berekenen geplaatst
+{
+    Calc resistorCalculator; // creeer object om de waarden te plaatsen en om berekeningen uit te voeren
+
+    // boolean die checkt als het een 5 ring resistor is
+    bool  isFiveRing = ui->radioFive->isChecked();
+    resistorCalculator.setFiveBand(isFiveRing);
+
+    ui->comboDig_3->setVisible(isFiveRing); // de derde digit wijst alleen als wij 5 ring resistor kiezen
+
+    // setter wordt gebruikt om kleur code waarden van de combo boxes te plaatsen
+    resistorCalculator.setDigit1(ui->comboDig_1->currentData().toInt());
+    resistorCalculator.setDigit2(ui->comboDig_2->currentData().toInt());
+
+    if (isFiveRing)
+    {
+        resistorCalculator.setDigit3(ui->comboDig_3->currentData().toInt());
+    }
+
+    resistorCalculator.setMultiplier(ui->comboMultiplier->currentData().toInt());
+    resistorCalculator.setTolerance(ui->comboTolerance->currentData().toInt());
+
+    resistorCalculator.calculateResistValue(); // waarden zijn geset dus weerstand waarde can worden berekend.
+
+    // waarden worden geplaatst buiten het object
+    double resistorValue = resistorCalculator.getResistValue();
+    double toleranceValue = resistorCalculator.getTolerance();
+
+    // Resultaat wordt weergegeven
+    QString result = ("Resistance value: " + QString::number(resistorValue) + " " + QString::number(toleranceValue) + "%");
+
+    ui->label->setText(result);
+};
+
 MainWindow::~MainWindow()
 {
     delete ui;
