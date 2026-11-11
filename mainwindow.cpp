@@ -84,14 +84,13 @@ void MainWindow::calculateValue() // Hier wordt de logica voor het berekenen gep
     {
         resistorCalculator.setDigit3(ui->comboDig_3->currentData().toInt());
 
-        ui->r3->setVisible(true);
         ui->r3->setStyleSheet(QString("background-color: %1").arg(ui->comboDig_3->currentText()));
         ui->r3->setGeometry(370,160, 30, 80);
         ui->r4->setGeometry(410,160, 30, 80);
 
     }
     else {
-        ui->r3->setVisible(false);
+
         ui->r4->setGeometry(380,160,30,80);
 
     }
