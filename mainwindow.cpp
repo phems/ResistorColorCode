@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "calc.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     QString toleranceColors[] = {"Brown", "Red", "Green", "Blue", "Violet", "Gray", "Gold", "Silver"};
     double toleranceValues[] = {1.0, 2.0, 0.5, 0.25, 0.1, 0.05, 5.0, 10.0};
 
+
+    // for loops om de kleuren en waarden in de combo boxes te plaatsen
     for (int i = 0; i<10; i++)
     {
         ui->comboDig_1->addItem(digitColors[i], QVariant(digitValues[i]));
@@ -35,6 +38,19 @@ MainWindow::MainWindow(QWidget *parent)
         ui->comboTolerance->addItem(toleranceColors[i], QVariant(toleranceValues[i]));
     }
 
+    // Sturen signals om de calculateValue function te roepen wanneer radio buttons worden gedrukt
+    connect(ui->radioFour, &QRadioButton::clicked, this, &MainWindow::calculateValue);
+    connect(ui->radioFive, &QRadioButton::clicked, this, &MainWindow::calculateValue);
+
+    // Sturen signals om de calculateValue function te roepen wanneer combo box inhoud verandert
+    connect(ui->comboDig_1, &QComboBox::currentTextChanged, this, &MainWindow::calculateValue);
+    connect(ui->comboDig_2, &QComboBox::currentTextChanged, this, &MainWindow::calculateValue);
+    connect(ui->comboDig_3, &QComboBox::currentTextChanged, this, &MainWindow::calculateValue);
+    connect(ui->comboMultiplier, &QComboBox::currentTextChanged, this, &MainWindow::calculateValue);
+    connect(ui->comboTolerance, &QComboBox::currentTextChanged, this, &MainWindow::calculateValue);
+
+    // calculateValue function bij het opstarten
+    calculateValue();
 }
 
 MainWindow::~MainWindow()
