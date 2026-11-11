@@ -65,18 +65,43 @@ void MainWindow::calculateValue() // Hier wordt de logica voor het berekenen gep
     resistorCalculator.setFiveBand(isFiveRing);
 
     ui->comboDig_3->setVisible(isFiveRing); // de derde digit wijst alleen als wij 5 ring resistor kiezen
+    ui->r3->setVisible(isFiveRing);
 
     // setter wordt gebruikt om kleur code waarden van de combo boxes te plaatsen
     resistorCalculator.setDigit1(ui->comboDig_1->currentData().toInt());
     resistorCalculator.setDigit2(ui->comboDig_2->currentData().toInt());
 
+    // set bg colors of rings(i used labels) depending on text in comboboxes
+    ui->r1->setStyleSheet(QString("background-color: %1").arg(ui->comboDig_1->currentText()));
+    ui->r2->setStyleSheet(QString("background-color: %1").arg(ui->comboDig_2->currentText()));
+
+    //set (x, y, width, height) for rings
+    ui->r1->setGeometry(280,160, 30, 80);
+    ui->r2->setGeometry(330,160, 30, 80);
+    ui->r5->setGeometry(470,160, 30, 80);
+
     if (isFiveRing)
     {
         resistorCalculator.setDigit3(ui->comboDig_3->currentData().toInt());
-    }
 
-    resistorCalculator.setMultiplier(ui->comboMultiplier->currentData().toInt());
-    resistorCalculator.setTolerance(ui->comboTolerance->currentData().toInt());
+        ui->r3->setVisible(true);
+        ui->r3->setStyleSheet(QString("background-color: %1").arg(ui->comboDig_3->currentText()));
+        ui->r3->setGeometry(370,160, 30, 80);
+        ui->r4->setGeometry(410,160, 30, 80);
+
+    }
+    else {
+        ui->r3->setVisible(false);
+        ui->r4->setGeometry(380,160,30,80);
+
+    }
+    resistorCalculator.setMultiplier(ui->comboMultiplier->currentData().toDouble());
+    resistorCalculator.setTolerance(ui->comboTolerance->currentData().toDouble());
+
+    ui->r4->setStyleSheet(QString("background-color: %1").arg(ui->comboMultiplier->currentText()));
+    ui->r5->setStyleSheet(QString("background-color: %1").arg(ui->comboTolerance->currentText()));
+
+
 
     resistorCalculator.calculateResistValue(); // waarden zijn geset dus weerstand waarde can worden berekend.
 
