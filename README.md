@@ -23,6 +23,7 @@ we chose to build.
 - Visual Resistor Representation – Displays a resistor illustration with colored bands that correspond to the selected colors.
 - Automatic Resistance Calculation – Displays the calculated resistance value based on the selected color bands.
 - Tolerance Calculation – Displays the resistor's tolerance percentage.
+- It's very own app icon.
 
 ![Our User Interface](WA_1794473796525.jpeg)
 ## Technologies used
