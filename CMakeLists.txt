@@ -18,15 +18,23 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
 )
+#MACOS_BUNDLE_ICON_FILE variable met de naam van de .icns file zonder path
+set(MACOSX_BUNDLE_ICON_FILE appico.icns)
+
+#volgende vertelt CMake waar de file te vinden is
+set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/AppIcons/appico.icns")
+    set_source_files_properties(${app_icon_macos} PROPERTIES
+           MACOSX_PACKAGE_LOCATION "Resources")
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ResistorCalc
+        MACOSX_BUNDLE
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
         calc.h
         calc.cpp
-
+        ${app_icon_macos}
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -64,6 +72,7 @@ set_target_properties(ResistorCalc PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE_ICON_FILE ${MACOSX_BUNDLE_ICON_FILE}
     WIN32_EXECUTABLE TRUE
 )
 
