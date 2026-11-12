@@ -42,6 +42,6 @@ we chose to build.
 - Input Validation: Improve error handling and prevent invalid color combinations.
 
 ### Author
-Elijah Wongsonadi 
-Elektrotechniek cohort 2025-2026
+Elijah Wongsonadi  
+Elektrotechniek cohort 2025-2026  
 @eliacademia on github
