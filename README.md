@@ -24,7 +24,7 @@ we chose to build.
 - Automatic Resistance Calculation – Displays the calculated resistance value based on the selected color bands.
 - Tolerance Calculation – Displays the resistor's tolerance percentage.
 
-![Our User Interface](
+![Our User Interface](WA_1794473796525.jpeg)
 ## Technologies used
 - QT creator.
 - Written in c++
