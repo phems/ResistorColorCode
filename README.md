@@ -41,7 +41,7 @@ we chose to build.
 - Calculation History: Allow users to view previously calculated resistor values.
 - Input Validation: Improve error handling and prevent invalid color combinations.
 
-** Author **
+** Author **  
 Elijah Wongsonadi  
 Anton de Kom University of Suriname  
 Elektrotechniek cohort 2025-2026  
