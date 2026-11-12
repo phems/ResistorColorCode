@@ -25,7 +25,7 @@ we chose to build.
 - Tolerance Calculation – Displays the resistor's tolerance percentage.
 - It's very own app icon.  
 
-## Our User Interface 
+#### Our User Interface 
 ![Our User Interface](WA_1794473796525.jpeg)  
 
 ## Technologies used
