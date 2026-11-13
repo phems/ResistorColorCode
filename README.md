@@ -5,10 +5,10 @@ A program that calculates the value of a resistor when you enter its colors.
 We are students at the Anton de Kom University of Suriname, getting our undergraduate in Electrical Engineering. Each of us with a special interest in IT.
 Our team consists of:
 
-1. Salim Yushua                            2025
-2. Joshua van Leeuwaarde (Team leader)     2025059
-3. Jay Vrieze                              2025
-4. Elijah Wongsonadi                       20250160
+1. Salim Yushua
+2. Joshua van Leeuwaarde (Team leader)
+3. Jay Vrieze
+4. Elijah Wongsonadi
 
 ## Project Description
 As a final assignment for the course Object Oriented Programming, we had to create a program that contains a Graphical User Interface (GUI). 
