@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "calc.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -19,9 +20,12 @@ public:
 
 private slots:
     void calculateValue(); // function die called wordt wanneer een kleur wordt verandert en er 4 of 5 ringen wordt gekozen
+    void radioButtonChange();
+    void comboBoxChange();
 
 private:
+    void updateDisplay();
+    Calc resistorCalculator;
     Ui::MainWindow *ui;
-
 };
 #endif // MAINWINDOW_H
