@@ -1,7 +1,7 @@
 # Resistor color calculator
 A program that calculates the value of a resistor when you enter its colors.
 
-## Team Members and their student ID's
+## Team Members
 We are students at the Anton de Kom University of Suriname, getting our undergraduate in Electrical Engineering. Each of us with a special interest in IT.
 Our team consists of:
 
