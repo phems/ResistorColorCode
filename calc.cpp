@@ -1,4 +1,8 @@
 #include "calc.h"
+#include <cmath>
+
+const QString defaultQString = "%1 Ohm %2%"; // %1Ω %2%
+const std::string suffixes[] = {"", "K", "M", "G"};
 
 Calc::Calc()
     : fiveBand(false)
@@ -47,6 +51,19 @@ void Calc::setTolerance(double t)
     tolerance = t;
 }
 
+QString Calc::getMostCompactForm() const
+{
+    double newValue = this->resistValue;
+    int suffixIndex = 0;
+    while (newValue / 1000 >= 1)
+    {
+        suffixIndex++;
+        newValue /= 1000;
+    }
+
+    return QString::number(newValue).append(suffixes[suffixIndex]);
+}
+
 void Calc::recalculateResistValue()
 {
     if (fiveBand) {
@@ -68,4 +85,32 @@ double Calc::getResistValue() const
 double Calc::getTolerance() const
 {
     return tolerance;
+}
+
+QString Calc::toQString() const
+{
+    return QString(defaultQString).arg(this->resistValue).arg(this->tolerance);
+}
+
+QString Calc::toQString(int suffixIndex) const
+{
+
+    if (suffixIndex < 0 || 3 < suffixIndex)
+    {
+        return QString("Invalid suffix index");
+    }
+
+    if (suffixIndex == 0)
+    {
+        return this->toQString();
+    }
+
+    double newValue = this->resistValue / (std::pow(1000.0, suffixIndex));
+    QString result = QString::number(newValue).append(suffixes[suffixIndex]);
+    return QString(defaultQString).arg(result).arg(this->tolerance);
+}
+
+QString Calc::toQStringMostCompact() const
+{
+    return QString(defaultQString).arg(this->getMostCompactForm()).arg(this->tolerance);
 }

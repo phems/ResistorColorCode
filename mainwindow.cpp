@@ -138,11 +138,7 @@ void MainWindow::comboBoxChange()
 
 void MainWindow::updateDisplay()
 {
-    double resistorValue = this->resistorCalculator.getResistValue();
-    double toleranceValue = this->resistorCalculator.getTolerance();
-    std::string result = "Resistance value: " + std::to_string(resistorValue) + "Ω "
-                         + std::to_string(toleranceValue) + "%";
-    std::cout << result << std::endl;
+    std::cout << "Resistance value: " << this->resistorCalculator.toQString(3).toStdString() << std::endl;
 }
 
 MainWindow::~MainWindow()

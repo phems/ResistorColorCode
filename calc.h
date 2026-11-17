@@ -1,6 +1,7 @@
 #ifndef CALC_H
 #define CALC_H
 #include <iostream>
+#include <QString>
 
 class Calc
 {
@@ -13,6 +14,7 @@ private:
     double tolerance;
     double resistValue;
     void recalculateResistValue();
+    QString getMostCompactForm() const;
 
 public:
     // Constructor
@@ -31,5 +33,8 @@ public:
     bool getFiveBand() const;
     double getResistValue() const;
     double getTolerance() const;
+    QString toQString() const;
+    QString toQStringMostCompact() const;
+    QString toQString(int suffixIndex) const;
 };
 #endif
