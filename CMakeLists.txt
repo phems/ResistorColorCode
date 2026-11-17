@@ -24,8 +24,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
-        calc.h
-        calc.cpp
+        resistorcalculator.h
+        resistorcalculator.cpp
+        historymanager.h historymanager.cpp
+        historywidget.h historywidget.cpp historywidget.ui
+
 
 
     )

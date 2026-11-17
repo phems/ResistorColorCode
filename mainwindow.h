@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "calc.h"
+#include "resistorcalculator.h"
+#include "historymanager.h"
+#include "historywidget.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -25,7 +27,9 @@ private slots:
 
 private:
     void updateDisplay();
-    Calc resistorCalculator;
+    ResistorCalculator resistorCalculator;
+    HistoryManager historyManager;
+    HistoryWidget *historyWidget;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

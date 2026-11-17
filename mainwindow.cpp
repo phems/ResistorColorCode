@@ -4,45 +4,34 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , historyWidget(new HistoryWidget(this))
 {
+
     ui->setupUi(this);
     ui->radioFour->setChecked(true);
-    this->resistorCalculator = Calc();
+    this->resistorCalculator = ResistorCalculator();
+    this->historyManager = HistoryManager();
 
     // arrays voor de lijst bij QComboBoxes
-    QString digitColors[]
-        = {"Black", "Brown", "Red", "Orange", "Yellow", "Green", "Blue", "Violet", "Gray", "White"};
+    QStringList digitColors = ResistorCalculator::getDigitColors();
+    QStringList multiplierColors = ResistorCalculator::getMultiplierColors();
+    QStringList toleranceColors = ResistorCalculator::getToleranceColors();
 
-    QString multiplierColors[] = {"Black",
-                                  "Brown",
-                                  "Red",
-                                  "Orange",
-                                  "Yellow",
-                                  "Green",
-                                  "Blue",
-                                  "Violet",
-                                  "Gray",
-                                  "White",
-                                  "Gold",
-                                  "Silver"};
-    double multiplierValues[]
-        = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 0.1, 0.01};
-
-    QString toleranceColors[] = {"Brown", "Red", "Green", "Blue", "Violet", "Gray", "Gold", "Silver"};
-    double toleranceValues[] = {1.0, 2.0, 0.5, 0.25, 0.1, 0.05, 5.0, 10.0};
+    std::array<double, 12> multiplierValues = ResistorCalculator::getMultiplierValues();
+    std::array<double, 8> toleranceValues = ResistorCalculator::getToleranceValues();
 
     // for loops om de kleuren en waarden in de combo boxes te plaatsen
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < digitColors.size(); i++) {
         ui->comboDig_1->addItem(digitColors[i], QVariant(i));
         ui->comboDig_2->addItem(digitColors[i], QVariant(i));
         ui->comboDig_3->addItem(digitColors[i], QVariant(i));
     }
 
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < multiplierColors.size(); i++) {
         ui->comboMultiplier->addItem(multiplierColors[i], QVariant(multiplierValues[i]));
     }
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < toleranceValues.size(); i++) {
         ui->comboTolerance->addItem(toleranceColors[i], QVariant(toleranceValues[i]));
     }
 
@@ -59,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // calculateValue function bij het opstarten
     calculateValue();
+    historyWidget->setGeometry(0, 0, 400, 300);
+    historyWidget->show();
 
     // verander de window titel
     QWidget::setWindowTitle("Color Code Calculator");
@@ -66,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::calculateValue() // Hier wordt de logica voor het berekenen geplaatst
 {
-    Calc resistorCalculator; // creeer object om de waarden te plaatsen en om berekeningen uit te voeren
+    ResistorCalculator resistorCalculator; // creeer object om de waarden te plaatsen en om berekeningen uit te voeren
 
     // boolean die checkt als het een 5 ring resistor is
     bool isFiveRing = ui->radioFive->isChecked();
@@ -138,7 +129,7 @@ void MainWindow::comboBoxChange()
 
 void MainWindow::updateDisplay()
 {
-    std::cout << "Resistance value: " << this->resistorCalculator.toQString(3).toStdString() << std::endl;
+    std::cout << "Resistance value: " << this->resistorCalculator.toQString(0).toStdString() << std::endl;
 }
 
 MainWindow::~MainWindow()
