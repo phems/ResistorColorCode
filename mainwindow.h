@@ -28,7 +28,7 @@ private slots:
 
 private:
     void updateDisplay();
-    ResistorCalculator resistorCalculator;
+    ResistorCalculator *resistorCalculator;
     HistoryManager historyManager;
     HistoryWidget *historyWidget;
     Ui::MainWindow *ui;

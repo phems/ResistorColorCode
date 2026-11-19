@@ -4,12 +4,12 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , resistorCalculator(new ResistorCalculator(this))
     , historyWidget(new HistoryWidget(this))
 {
 
     ui->setupUi(this);
     ui->radioFour->setChecked(true);
-    this->resistorCalculator = ResistorCalculator();
     this->historyManager = HistoryManager();
 
     // arrays voor de lijst bij QComboBoxes
@@ -37,12 +37,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->radioFive, &QRadioButton::clicked, this, &MainWindow::radioButtonChange);
 
     // Sturen signals om de calculateValue function te roepen wanneer combo box inhoud verandert
-    connect(ui->comboDig_1, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboDig_2, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboDig_3, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboMultiplier, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboTolerance, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
+    connect(ui->comboDig_1, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setDigit(0, index);});
+    connect(ui->comboDig_2, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setDigit(1, index);});
+    connect(ui->comboDig_3, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setDigit(2, index);});
 
+    connect(ui->comboMultiplier, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setMultiplier(index);});
+    connect(ui->comboTolerance, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setTolerance(index);});
+
+
+    connect(resistorCalculator, &ResistorCalculator::resistValueChanged, this, &MainWindow::updateDisplay);
     // calculateValue function bij het opstarten
     //calculateValue();
     historyWidget->setGeometry(0, 0, 400, 300);
@@ -55,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::radioButtonChange()
 {
     bool isFiveRing = ui->radioFive->isChecked();
-    this->resistorCalculator.setFiveBand(isFiveRing);
+    this->resistorCalculator->setFiveBand(isFiveRing);
     this->updateDisplay();
 }
 
@@ -72,7 +75,7 @@ void MainWindow::comboBoxChange(int indexChange)
 
 void MainWindow::updateDisplay()
 {
-    qInfo() << "Resistance value:" << this->resistorCalculator.toQString(0);
+    qInfo() << "Resistance value:" << this->resistorCalculator->toQString(0);
     //std::cout << "Resistance value: " << this->resistorCalculator.toQString(0).toStdString() << std::endl;
 }
 

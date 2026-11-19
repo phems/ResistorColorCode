@@ -1,42 +1,37 @@
 #ifndef RESISTORCALCULATOR_H
 #define RESISTORCALCULATOR_H
+#include <QObject>
+#include <QDebug>
 #include <iostream>
 #include <QString>
 #include <QStringList>
 #include <array>
 #include "resistorband.h"
 
-class ResistorCalculator
+class ResistorCalculator : public QObject
 {
+
+Q_OBJECT
+
 private:
+    static const int maxDigitBands;
     bool fiveBand;
-    DigitBand digit1;
-    DigitBand digit2;
-    DigitBand digit3;
+    std::array<DigitBand, 3> digitBands;
     MultiplierBand multiplier;
     ToleranceBand tolerance;
     double resistValue;
 
     void recalculateResistValue();
     QString getMostCompactForm() const;
+    bool isValidDigitIndex(int digitIndex);
 
 public:
     // Constructor
-    ResistorCalculator();
+    explicit ResistorCalculator(QObject *parent = nullptr);
     ~ResistorCalculator();
 
-    // Setters
-    void setFiveBand(bool fiveBand);
-    void setDigit1(DigitBand color);
-    void setDigit2(DigitBand color);
-    void setDigit3(DigitBand color);
-    void setMultiplier(MultiplierBand color);
-    void setTolerance(ToleranceBand color);
-
     // Getters
-    DigitBand getDigit1() const;
-    DigitBand getDigit2() const;
-    DigitBand getDigit3() const;
+    DigitBand getDigitBandOf(int digitIndex) const;
     MultiplierBand getMultiplier() const;
     ToleranceBand getTolerance() const;
 
@@ -46,5 +41,21 @@ public:
     QString toQString() const;
     QString toQStringMostCompact() const;
     QString toQString(int suffixIndex) const;
+
+    signals:
+    void resistValueChanged(double newValue, double oldValue);
+    void digitChanged(int index, DigitBand newValue, DigitBand oldValue);
+    void multiplierChanged(MultiplierBand newValue, MultiplierBand oldValue);
+    void toleranceChanged(ToleranceBand newValue, ToleranceBand oldValue);
+
+    public slots:
+    // Setters
+    void setFiveBand(bool fiveBand);
+    void setDigit(int digitIndex, DigitBand color);
+    void setDigit(int digitIndex, int bandIndex);
+    void setMultiplier(MultiplierBand color);
+    void setMultiplier(int bandIndex);
+    void setTolerance(ToleranceBand color);
+    void setTolerance(int bandIndex);
 };
 #endif
