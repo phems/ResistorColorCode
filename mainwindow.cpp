@@ -13,12 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->historyManager = HistoryManager();
 
     // arrays voor de lijst bij QComboBoxes
-    QStringList digitColors = ResistorCalculator::getDigitColors();
-    QStringList multiplierColors = ResistorCalculator::getMultiplierColors();
-    QStringList toleranceColors = ResistorCalculator::getToleranceColors();
-
-    std::array<double, 12> multiplierValues = ResistorCalculator::getMultiplierValues();
-    std::array<double, 8> toleranceValues = ResistorCalculator::getToleranceValues();
+    QStringList digitColors = ResistorBand::getDigitBandList();
+    QStringList multiplierColors = ResistorBand::getMultiplierBandList();
+    QStringList toleranceColors = ResistorBand::getToleranceBandList();
 
     // for loops om de kleuren en waarden in de combo boxes te plaatsen
     for (int i = 0; i < digitColors.size(); i++) {
@@ -28,11 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     for (int i = 0; i < multiplierColors.size(); i++) {
-        ui->comboMultiplier->addItem(multiplierColors[i], QVariant(multiplierValues[i]));
+        ui->comboMultiplier->addItem(multiplierColors[i], QVariant(ResistorBand::getMultiplierValueFromInt(i)));
     }
 
-    for (int i = 0; i < toleranceValues.size(); i++) {
-        ui->comboTolerance->addItem(toleranceColors[i], QVariant(toleranceValues[i]));
+    for (int i = 0; i < toleranceColors.size(); i++) {
+        ui->comboTolerance->addItem(toleranceColors[i], QVariant(ResistorBand::getToleranceValueFromInt(i)));
     }
 
     // Sturen signals om de calculateValue function te roepen wanneer radio buttons worden gedrukt
@@ -40,74 +37,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->radioFive, &QRadioButton::clicked, this, &MainWindow::radioButtonChange);
 
     // Sturen signals om de calculateValue function te roepen wanneer combo box inhoud verandert
-    connect(ui->comboDig_1, &QComboBox::currentTextChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboDig_2, &QComboBox::currentTextChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboDig_3, &QComboBox::currentTextChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboMultiplier, &QComboBox::currentTextChanged, this, &MainWindow::comboBoxChange);
-    connect(ui->comboTolerance, &QComboBox::currentTextChanged, this, &MainWindow::comboBoxChange);
+    connect(ui->comboDig_1, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
+    connect(ui->comboDig_2, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
+    connect(ui->comboDig_3, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
+    connect(ui->comboMultiplier, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
+    connect(ui->comboTolerance, &QComboBox::currentIndexChanged, this, &MainWindow::comboBoxChange);
 
     // calculateValue function bij het opstarten
-    calculateValue();
+    //calculateValue();
     historyWidget->setGeometry(0, 0, 400, 300);
     historyWidget->show();
 
     // verander de window titel
     QWidget::setWindowTitle("Color Code Calculator");
-}
-
-void MainWindow::calculateValue() // Hier wordt de logica voor het berekenen geplaatst
-{
-    ResistorCalculator resistorCalculator; // creeer object om de waarden te plaatsen en om berekeningen uit te voeren
-
-    // boolean die checkt als het een 5 ring resistor is
-    bool isFiveRing = ui->radioFive->isChecked();
-    resistorCalculator.setFiveBand(isFiveRing);
-
-    ui->comboDig_3->setVisible(
-        isFiveRing); // de derde digit wijst alleen als wij 5 ring resistor kiezen
-    ui->r3->setVisible(isFiveRing);
-
-    // setter wordt gebruikt om kleur code waarden van de combo boxes te plaatsen
-    resistorCalculator.setDigit1(ui->comboDig_1->currentData().toInt());
-    resistorCalculator.setDigit2(ui->comboDig_2->currentData().toInt());
-
-    // set bg colors of rings(i used labels) depending on text in comboboxes
-    ui->r1->setStyleSheet(QString("background-color: %1").arg(ui->comboDig_1->currentText()));
-    ui->r2->setStyleSheet(QString("background-color: %1").arg(ui->comboDig_2->currentText()));
-
-    //set (x, y, width, height) for rings
-    ui->r1->setGeometry(280, 160, 30, 80);
-    ui->r2->setGeometry(330, 160, 30, 80);
-    ui->r5->setGeometry(470, 160, 30, 80);
-
-    if (isFiveRing) {
-        resistorCalculator.setDigit3(ui->comboDig_3->currentData().toInt());
-
-        ui->r3->setStyleSheet(QString("background-color: %1").arg(ui->comboDig_3->currentText()));
-        ui->r3->setGeometry(370, 160, 30, 80);
-        ui->r4->setGeometry(410, 160, 30, 80);
-
-    } else {
-        ui->r4->setGeometry(380, 160, 30, 80);
-    }
-    resistorCalculator.setMultiplier(ui->comboMultiplier->currentData().toDouble());
-    resistorCalculator.setTolerance(ui->comboTolerance->currentData().toDouble());
-
-    ui->r4->setStyleSheet(QString("background-color: %1").arg(ui->comboMultiplier->currentText()));
-    ui->r5->setStyleSheet(QString("background-color: %1").arg(ui->comboTolerance->currentText()));
-
-    // resistorCalculator
-    //     .calculateResistValue(); // waarden zijn geset dus weerstand waarde can worden berekend.
-
-    // waarden worden geplaatst buiten het object
-    double resistorValue = resistorCalculator.getResistValue();
-    double toleranceValue = resistorCalculator.getTolerance();
-
-    // Resultaat wordt weergegeven
-    QString result = ("Resistance value: " + QString::number(resistorValue) + "Ω "
-                      + QString::number(toleranceValue) + "%");
-
-    ui->label->setText(result);
 }
 
 void MainWindow::radioButtonChange()
@@ -117,19 +59,21 @@ void MainWindow::radioButtonChange()
     this->updateDisplay();
 }
 
-void MainWindow::comboBoxChange()
+void MainWindow::comboBoxChange(int indexChange)
 {
-    this->resistorCalculator.setDigit1(ui->comboDig_1->currentData().toInt());
-    this->resistorCalculator.setDigit2(ui->comboDig_2->currentData().toInt());
-    this->resistorCalculator.setDigit3(ui->comboDig_2->currentData().toInt());
-    this->resistorCalculator.setMultiplier(ui->comboMultiplier->currentData().toDouble());
-    this->resistorCalculator.setTolerance(ui->comboTolerance->currentData().toDouble());
+    qInfo() << QString::number(indexChange);
+    // this->resistorCalculator.setDigit1(ui->comboDig_1->currentData().toInt());
+    // this->resistorCalculator.setDigit2(ui->comboDig_2->currentData().toInt());
+    // this->resistorCalculator.setDigit3(ui->comboDig_2->currentData().toInt());
+    // this->resistorCalculator.setMultiplier(ui->comboMultiplier->currentData().toDouble());
+    // this->resistorCalculator.setTolerance(ui->comboTolerance->currentData().toDouble());
     this->updateDisplay();
 }
 
 void MainWindow::updateDisplay()
 {
-    std::cout << "Resistance value: " << this->resistorCalculator.toQString(0).toStdString() << std::endl;
+    qInfo() << "Resistance value:" << this->resistorCalculator.toQString(0);
+    //std::cout << "Resistance value: " << this->resistorCalculator.toQString(0).toStdString() << std::endl;
 }
 
 MainWindow::~MainWindow()

@@ -4,27 +4,21 @@
 #include <QString>
 #include <QStringList>
 #include <array>
+#include "resistorband.h"
 
 class ResistorCalculator
 {
 private:
     bool fiveBand;
-    int digit1;
-    int digit2;
-    int digit3;
-    double multiplier;
-    double tolerance;
+    DigitBand digit1;
+    DigitBand digit2;
+    DigitBand digit3;
+    MultiplierBand multiplier;
+    ToleranceBand tolerance;
     double resistValue;
 
     void recalculateResistValue();
     QString getMostCompactForm() const;
-
-    static const QStringList digitColors;
-    static const QStringList multiplierColors;
-    static const QStringList toleranceColors;
-
-    static const std::array<double, 12> multiplierValues;
-    static const std::array<double, 8> toleranceValues;
 
 public:
     // Constructor
@@ -33,27 +27,21 @@ public:
 
     // Setters
     void setFiveBand(bool fiveBand);
-    void setDigit1(int digit1);
-    void setDigit2(int digit2);
-    void setDigit3(int digit3);
-    void setMultiplier(double multiplier);
-    void setTolerance(double tolerance);
+    void setDigit1(DigitBand color);
+    void setDigit2(DigitBand color);
+    void setDigit3(DigitBand color);
+    void setMultiplier(MultiplierBand color);
+    void setTolerance(ToleranceBand color);
 
     // Getters
-    int getDigit1() const;
-    int getDigit2() const;
-    int getDigit3() const;
-    double getMultiplier() const;
-    double getTolerance() const;
+    DigitBand getDigit1() const;
+    DigitBand getDigit2() const;
+    DigitBand getDigit3() const;
+    MultiplierBand getMultiplier() const;
+    ToleranceBand getTolerance() const;
+
     bool getFiveBand() const;
     double getResistValue() const;
-
-    static const QStringList& getDigitColors();
-    static const QStringList& getMultiplierColors();
-    static const QStringList& getToleranceColors();
-
-    static const std::array<double, 12>& getMultiplierValues();
-    static const std::array<double, 8>& getToleranceValues();
 
     QString toQString() const;
     QString toQStringMostCompact() const;

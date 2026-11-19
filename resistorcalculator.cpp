@@ -1,27 +1,19 @@
 #include "resistorcalculator.h"
 #include <cmath>
 
-
-const QStringList ResistorCalculator::digitColors = {"Black", "Brown", "Red", "Orange", "Yellow", "Green", "Blue", "Violet", "Gray", "White"};
-const QStringList ResistorCalculator::multiplierColors = {"Black", "Brown", "Red", "Orange", "Yellow", "Green", "Blue", "Violet", "Gray",
-                                    "White", "Gold", "Silver"};
-const QStringList ResistorCalculator::toleranceColors = {"Brown", "Red", "Green", "Blue", "Violet", "Gray", "Gold", "Silver"};
-
-const std::array<double, 12> ResistorCalculator::multiplierValues = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 0.1, 0.01};
-const std::array<double, 8> ResistorCalculator::toleranceValues = {1.0, 2.0, 0.5, 0.25, 0.1, 0.05, 5.0, 10.0};
-
 const QString defaultQString = "%1 Ohm %2%"; // %1Ω %2%
 const std::string suffixes[] = {"", "K", "M", "G"};
 
 ResistorCalculator::ResistorCalculator()
     : fiveBand(false)
-    , digit1(0)
-    , digit2(0)
-    , digit3(0)
-    , multiplier(0)
-    , tolerance(0.0)
-    , resistValue(0.0)
-{}
+    , digit1(DigitBand::Black)
+    , digit2(DigitBand::Black)
+    , digit3(DigitBand::Black)
+    , multiplier(MultiplierBand::Black)
+    , tolerance(ToleranceBand::Brown)
+{
+    recalculateResistValue();
+}
 
 ResistorCalculator::~ResistorCalculator() {}
 
@@ -31,33 +23,33 @@ void ResistorCalculator::setFiveBand(bool fiveB)
     this->recalculateResistValue();
 }
 
-void ResistorCalculator::setDigit1(int d1)
+void ResistorCalculator::setDigit1(DigitBand newColor)
 {
-    digit1 = d1;
+    digit1 = newColor;
     this->recalculateResistValue();
 }
 
-void ResistorCalculator::setDigit2(int d2)
+void ResistorCalculator::setDigit2(DigitBand newColor)
 {
-    digit2 = d2;
+    digit2 = newColor;
     this->recalculateResistValue();
 }
 
-void ResistorCalculator::setDigit3(int d3)
+void ResistorCalculator::setDigit3(DigitBand newColor)
 {
-    digit3 = d3;
+    digit3 = newColor;
     this->recalculateResistValue();
 }
 
-void ResistorCalculator::setMultiplier(double m)
+void ResistorCalculator::setMultiplier(MultiplierBand newColor)
 {
-    multiplier = m;
+    multiplier = newColor;
     this->recalculateResistValue();
 }
 
-void ResistorCalculator::setTolerance(double t)
+void ResistorCalculator::setTolerance(ToleranceBand newColor)
 {
-    tolerance = t;
+    tolerance = newColor;
 }
 
 QString ResistorCalculator::getMostCompactForm() const
@@ -75,10 +67,16 @@ QString ResistorCalculator::getMostCompactForm() const
 
 void ResistorCalculator::recalculateResistValue()
 {
+
+    int digit1Value = ResistorBand::getDigitValue(digit1);
+    int digit2Value = ResistorBand::getDigitValue(digit2);
+    double multiplierValue = ResistorBand::getMultiplierValue(multiplier);
+
     if (fiveBand) {
-        resistValue = (digit1 * 100 + digit2 * 10 + digit3) * multiplier;
+        int digit3Value = ResistorBand::getDigitValue(digit3);
+        resistValue = (digit1Value * 100 + digit2Value * 10 + digit3Value) * multiplierValue;
     } else {
-        resistValue = (digit1 * 10 + digit2) * multiplier;
+        resistValue = (digit1Value * 10 + digit2Value) * multiplierValue;
     }
 }
 
@@ -91,39 +89,14 @@ double ResistorCalculator::getResistValue() const
     return resistValue;
 }
 
-double ResistorCalculator::getTolerance() const
+ToleranceBand ResistorCalculator::getTolerance() const
 {
     return tolerance;
 }
 
-const QStringList& ResistorCalculator::getDigitColors()
-{
-    return ResistorCalculator::digitColors;
-}
-
-const QStringList& ResistorCalculator::getMultiplierColors()
-{
-    return ResistorCalculator::multiplierColors;
-}
-
-const QStringList& ResistorCalculator::getToleranceColors()
-{
-    return ResistorCalculator::toleranceColors;
-}
-
-const std::array<double, 12>& ResistorCalculator::getMultiplierValues()
-{
-    return ResistorCalculator::multiplierValues;
-}
-
-const std::array<double, 8>& ResistorCalculator::getToleranceValues()
-{
-    return ResistorCalculator::toleranceValues;
-}
-
 QString ResistorCalculator::toQString() const
 {
-    return QString(defaultQString).arg(this->resistValue).arg(this->tolerance);
+    return QString(defaultQString).arg(this->resistValue).arg(ResistorBand::getToleranceValue(tolerance));
 }
 
 QString ResistorCalculator::toQString(int suffixIndex) const
@@ -141,10 +114,10 @@ QString ResistorCalculator::toQString(int suffixIndex) const
 
     double newValue = this->resistValue / (std::pow(1000.0, suffixIndex));
     QString result = QString::number(newValue).append(suffixes[suffixIndex]);
-    return QString(defaultQString).arg(result).arg(this->tolerance);
+    return QString(defaultQString).arg(result).arg(ResistorBand::getToleranceValue(tolerance));
 }
 
 QString ResistorCalculator::toQStringMostCompact() const
 {
-    return QString(defaultQString).arg(this->getMostCompactForm()).arg(this->tolerance);
+    return QString(defaultQString).arg(this->getMostCompactForm()).arg(ResistorBand::getToleranceValue(tolerance));
 }

@@ -5,6 +5,7 @@
 #include "historymanager.h"
 #include "historywidget.h"
 #include <QMainWindow>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,9 +22,9 @@ public:
     ~MainWindow() override;
 
 private slots:
-    void calculateValue(); // function die called wordt wanneer een kleur wordt verandert en er 4 of 5 ringen wordt gekozen
+    //void calculateValue(); // function die called wordt wanneer een kleur wordt verandert en er 4 of 5 ringen wordt gekozen
     void radioButtonChange();
-    void comboBoxChange();
+    void comboBoxChange(int index);
 
 private:
     void updateDisplay();
