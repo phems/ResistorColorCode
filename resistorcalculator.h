@@ -47,6 +47,7 @@ public:
     void digitChanged(int index, DigitBand newValue, DigitBand oldValue);
     void multiplierChanged(MultiplierBand newValue, MultiplierBand oldValue);
     void toleranceChanged(ToleranceBand newValue, ToleranceBand oldValue);
+    void fiveBandChanged(bool newValue);
 
     public slots:
     // Setters

@@ -4,6 +4,7 @@
 #include "resistorcalculator.h"
 #include "historymanager.h"
 #include "historywidget.h"
+#include "resistorwidget.h"
 #include <QMainWindow>
 #include <QDebug>
 
@@ -31,6 +32,7 @@ private:
     ResistorCalculator *resistorCalculator;
     HistoryManager historyManager;
     HistoryWidget *historyWidget;
+    ResistorWidget *resistorWidget;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

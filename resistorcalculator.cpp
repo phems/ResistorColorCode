@@ -19,7 +19,14 @@ ResistorCalculator::~ResistorCalculator() {}
 
 void ResistorCalculator::setFiveBand(bool fiveB)
 {
+    if (fiveBand == fiveB)
+    {
+        qInfo() << "Can't change fiveBand because it's the same value";
+        return;
+    }
+
     fiveBand = fiveB;
+    emit fiveBandChanged(fiveBand);
     this->recalculateResistValue();
 }
 

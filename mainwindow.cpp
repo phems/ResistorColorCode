@@ -6,10 +6,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , resistorCalculator(new ResistorCalculator(this))
     , historyWidget(new HistoryWidget(this))
+    , resistorWidget(new ResistorWidget(this))
 {
 
     ui->setupUi(this);
     ui->radioFour->setChecked(true);
+    ui->comboDig_3->hide();
     this->historyManager = HistoryManager();
 
     // arrays voor de lijst bij QComboBoxes
@@ -32,25 +34,32 @@ MainWindow::MainWindow(QWidget *parent)
         ui->comboTolerance->addItem(toleranceColors[i], QVariant(ResistorBand::getToleranceValueFromInt(i)));
     }
 
-    // Sturen signals om de calculateValue function te roepen wanneer radio buttons worden gedrukt
-    connect(ui->radioFour, &QRadioButton::clicked, this, &MainWindow::radioButtonChange);
-    connect(ui->radioFive, &QRadioButton::clicked, this, &MainWindow::radioButtonChange);
+    // Connecting RadioButtons with the resistorCalculator
+    connect(ui->radioFour, &QRadioButton::clicked, this, [this](){resistorCalculator->setFiveBand(false);
+        ui->comboDig_3->hide();});
+    connect(ui->radioFive, &QRadioButton::clicked, this, [this](){resistorCalculator->setFiveBand(true);
+        ui->comboDig_3->show();});
 
-    // Sturen signals om de calculateValue function te roepen wanneer combo box inhoud verandert
+    // Connecting ComboBoxes with the resistorCalculator
     connect(ui->comboDig_1, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setDigit(0, index);});
     connect(ui->comboDig_2, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setDigit(1, index);});
     connect(ui->comboDig_3, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setDigit(2, index);});
-
     connect(ui->comboMultiplier, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setMultiplier(index);});
     connect(ui->comboTolerance, &QComboBox::currentIndexChanged, this, [this](int index){resistorCalculator->setTolerance(index);});
 
-
     connect(resistorCalculator, &ResistorCalculator::resistValueChanged, this, &MainWindow::updateDisplay);
-    // calculateValue function bij het opstarten
-    //calculateValue();
-    historyWidget->setGeometry(0, 0, 400, 300);
-    historyWidget->show();
 
+    // Connecting resistorCalculator to resistorWidget
+    connect(resistorCalculator, &ResistorCalculator::fiveBandChanged, resistorWidget, ResistorWidget::setFiveBand);
+    connect(resistorCalculator, &ResistorCalculator::digitChanged, resistorWidget, ResistorWidget::changeDigitBand);
+    connect(resistorCalculator, &ResistorCalculator::multiplierChanged, resistorWidget, ResistorWidget::changeMultiplierBand);
+    connect(resistorCalculator, &ResistorCalculator::toleranceChanged, resistorWidget, ResistorWidget::changeToleranceBand);
+
+    resistorWidget->move(240, 160);
+    //historyWidget->setGeometry(0, 0, 400, 300);
+    historyWidget->hide();
+    resistorWidget->show();
+    resistorWidget->raise();
     // verander de window titel
     QWidget::setWindowTitle("Color Code Calculator");
 }

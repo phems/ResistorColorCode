@@ -29,6 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         historymanager.h historymanager.cpp
         historywidget.h historywidget.cpp historywidget.ui
         resistorband.h resistorband.cpp
+        resistorwidget.h resistorwidget.cpp resistorwidget.ui
 
 
 
